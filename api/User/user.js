@@ -1,15 +1,12 @@
 import * as sequelize from "sequelize";
 import db from "../../db/db";
-import tools from "../../util/tools";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { ScretKeys } from "../../config/config";
+import { getToken } from "../../util/token"
 
 // import {find_user_count} from './userUtils'
 
-export async function findUserData (str, model) {
-    console.log('model',model)
-    return {code:200,msg:'请求成功'}
+export async function findUserData(str, model) {
+  console.log('model', model)
+  return { code: 200, msg: '请求成功' }
 }
 
 // export async function getUserAllList (str, model) {
@@ -87,6 +84,25 @@ export async function findUserData (str, model) {
 //     }
 // }
 
+//刷新token
+export async function refreshToken(model) {
+
+  let userData = await findUserById(model);
+
+  const payLoad = {
+    id: userData.data.id,
+    openid: model.openid,
+  };
+  const token = getToken(payLoad)
+  return {
+    code: 200,
+    msg: "刷新成功",
+    token: "Bearer " + token,
+  };
+
+}
+
+// 通过openid查找用户
 export async function findUserById(model) {
   let findUserSql = `select * from user where user_openid=:id`;
   let data = await db.pool.query(findUserSql, {
@@ -97,6 +113,7 @@ export async function findUserById(model) {
   });
   return { code: 200, data: data[0] };
 }
+
 
 export async function LoginOrRegister(model) {
   // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
@@ -124,10 +141,11 @@ export async function LoginOrRegister(model) {
     id: userData.data.id,
     openid: model.openid,
   };
-  const token = jwt.sign(payLoad, ScretKeys, { expiresIn: "30000" });
+  const token = getToken(payLoad)
   return {
     code: 200,
     msg: "登陆成功",
     token: "Bearer " + token,
   };
 }
+
