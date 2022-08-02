@@ -5,28 +5,26 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node serve.js",
+    "start": "nodemon app.js --exec babel-node",
     "dev": "nodemon app.js --exec babel-node"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "bcrypt": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
+    "koa-passport": "^5.0.0",
     "koa-router": "^10.0.0",
     "koa2-cors": "^2.0.6",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
+    "nodemon": "^2.0.19",
+    "passport-jwt": "^4.0.0",
     "sequelize": "^6.6.4"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "koa-passport": "^4.1.4",
-    "nodemon": "^2.0.15",
-    "passport-jwt": "^4.0.0"
   }
 }
