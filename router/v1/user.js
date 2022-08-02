@@ -14,7 +14,7 @@ const User = new Router({
 //     await user.login(ctx)
 // })
 
-User.get('/findUserData',JWT, async (ctx) => {
+User.get('/findUserData', JWT, async (ctx) => {
     await user.findUserData(ctx)
 })
 
@@ -26,6 +26,11 @@ User.get('/findUserData',JWT, async (ctx) => {
 User.post('/LoginOrRegister', async (ctx) => {
     await user.LoginOrRegister(ctx)
 })
+
+User.post('/refreshToken', async (ctx) => {
+    await user.refreshToken(ctx)
+})
+
 
 
 module.exports = {

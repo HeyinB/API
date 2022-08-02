@@ -2,8 +2,8 @@ import * as api from "../../api/User/user";
 import axios from "axios";
 
 export async function findUserData(ctx) {
-    let data = await api.findUserData(ctx.request.query)
-    ctx.body = data
+  let data = await api.findUserData(ctx.request.query)
+  ctx.body = data
 }
 
 // export async function getUserAllList(ctx) {
@@ -27,14 +27,23 @@ export async function findUserData(ctx) {
 // }
 
 export async function LoginOrRegister(ctx) {
-  let model = ctx.request.body;
-  let url = "https://api.weixin.qq.com/sns/jscode2session?appid=wxd26d2dcc3e0de2d7&secret=f4d56f616d9b1cf61e47e46fee5fd32b&js_code=" +
-  model.code +
-  "&grant_type=authorization_code "
-  let res = await axios({
-    method: "GET",
-    url
-  });
+  // let model = ctx.request.body;
+  // let url = "https://api.weixin.qq.com/sns/jscode2session?appid=wxd26d2dcc3e0de2d7&secret=f4d56f616d9b1cf61e47e46fee5fd32b&js_code=" +
+  // model.code +
+  // "&grant_type=authorization_code "
+  // let res = await axios({
+  //   method: "GET",
+  //   url
+  // });
+  let res = {}
+  res.data = {}
+  res.data.openid = 'oFTLj5KsqBnFAc5zAA1Sm0aap4gM'
   let data = await api.LoginOrRegister(res.data);
   ctx.body = data;
 }
+
+export async function refreshToken(ctx) {
+  let data = await api.refreshToken(ctx.request.body);
+  ctx.body = data;
+}
+
