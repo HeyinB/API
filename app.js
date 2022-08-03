@@ -15,6 +15,10 @@ require('./util/passport')(passport)
 
 app.use((ctx, next) => {
     console.log(ctx.request.url)
+    ctx.body = {
+        code: 200,
+        msg: '连接上了'
+    }
 }
 )
 
