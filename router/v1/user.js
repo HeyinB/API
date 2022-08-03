@@ -6,31 +6,26 @@ const User = new Router({
     prefix: '/v1/user'
 })
 // ctx.body = ctx.request.body;
-// User.post('/register', async (ctx) => {
-//     await user.register(ctx)
-// })
+User.post('/register', async (ctx) => {
+    await user.register(ctx)
+})
 
-// User.post('/login', async (ctx) => {
-//     await user.login(ctx)
-// })
+User.post('/login', async (ctx) => {
+    await user.login(ctx)
+})
 
-User.get('/findUserData', JWT, async (ctx) => {
+User.get('/findUserData', async (ctx) => {
     await user.findUserData(ctx)
 })
 
-// User.get('/getUserAllList', async (ctx) => {
-//     await user.getUserAllList(ctx)
-// })
-
-
-User.post('/LoginOrRegister', async (ctx) => {
-    await user.LoginOrRegister(ctx)
+User.get('/getUserAllList', async (ctx) => {
+    await user.getUserAllList(ctx)
 })
 
-User.post('/refreshToken', async (ctx) => {
-    await user.refreshToken(ctx)
+User.get('/findEE', JWT, async (ctx) => {
+    console.log(ctx.state.user);
+    await user.findEE(ctx)
 })
-
 
 
 module.exports = {
