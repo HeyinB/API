@@ -6,6 +6,8 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser'
 import passport from 'koa-passport'
 import cors from 'koa2-cors'
+import errors from './util/http-exception'
+global.errs = errors
 
 let app = new Koa();
 app.use(bodyParser());

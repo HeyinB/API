@@ -11,44 +11,44 @@ const getToken = function (payLoad) {
 }
 
 const authToken = async function (ctx, next) {
-  let pass = ['/v1/user/LoginOrRegister', '/v1/user/refreshToken']
-  let url = ctx.request.url, AllToken = ctx.request.header.authorization
 
-  console.log('----------------', url);
-  if (!pass.includes(url) && AllToken) {
-    console.log('-------ctx.request---------进来了');
-    const parts = AllToken.split(' ');
-    let statu = jwt.verify(parts[1], ScretKeys, async (err, decoded) => {
-      if (err) {
-        console.log(err.name)
-        let res = {}
-        switch (err.name) {
-          case 'JsonWebTokenError':
-            console.log('无效的token')
-            // res.status(403).send({ code: -1, msg: '无效的token' });
-            res = {
-              code: 403,
-              msg: '无效的token'
-            }
-            break;
-          case 'TokenExpiredError':
-            // res.status(403).send({ code: -1, msg: 'token过期' });
-            res = {
-              code: 403,
-              msg: 'token过期'
-            }
-            break;
+  try {
+    let pass = ['/v1/user/LoginOrRegister', '/v1/user/refreshToken']
+    let url = ctx.request.url, AllToken = ctx.request.header.authorization
+    console.log('----------------', url);
+    if (!pass.includes(url)) {
+      if (!AllToken) throw new errs.AuthFailed()
+
+      const parts = AllToken.split(' ');
+      jwt.verify(parts[1], ScretKeys, async (err, decoded) => {
+        if (err) {
+          switch (err.name) {
+            case 'JsonWebTokenError':
+              throw new errs.AuthFailed('无效的token', 10102)
+            case 'TokenExpiredError':
+              throw new errs.AuthFailed('token过期', 10010)
+            default:
+              throw new errs.AuthFailed()
+          }
+        } else {
+          await next()
         }
-        return res
-      } else {
-        await next()
+      })
+    } else {
+      await next()
+    }
+  } catch (err) {
+    if (err.errorCode) {
+      ctx.status = err.status || 500
+      ctx.body = {
+        code: err.code,
+        message: err.message,
+        errorCode: err.errorCode,
+        request: `${ctx.method} ${ctx.path}`,
       }
-    })
-    ctx.body = statu
-  } else {
-    ctx.body = {
-      code: 404,
-      msg: '未找到'
+    } else {
+      // 触发 koa app.on('error') 错误监听事件，可以打印出详细的错误堆栈 log
+      ctx.app.emit('error', err, ctx)
     }
   }
 }
