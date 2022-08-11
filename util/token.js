@@ -13,9 +13,9 @@ const getToken = function (payLoad) {
 const authToken = async function (ctx, next) {
 
   try {
-    let pass = ['/v1/user/LoginOrRegister', '/v1/user/refreshToken']
+    let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
     let url = ctx.request.url, AllToken = ctx.request.header.authorization
-    console.log('----------------', url);
+    console.log('-------url---------', url);
     if (!pass.includes(url)) {
       if (!AllToken) throw new errs.AuthFailed()
 

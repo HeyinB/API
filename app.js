@@ -16,6 +16,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 require('./util/passport')(passport)
 
+// token校验
 app.use((ctx, next) => {
     authToken(ctx, next)
 });
