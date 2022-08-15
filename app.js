@@ -17,8 +17,8 @@ app.use(passport.session())
 require('./util/passport')(passport)
 
 // token校验
-app.use((ctx, next) => {
-    authToken(ctx, next)
+app.use(async (ctx, next) => {
+    await authToken(ctx, next)
 });
 
 const res = readFile(process.cwd() + '/router')
