@@ -8,40 +8,37 @@ import { ScretKeys } from '../../config/config'
 
 //登录
 export async function LoginOrRegister(model) {
-  let UserList = await this.findUserData('usercode', model)
-  if (UserList.length === 0) {
-    return {
-      code: 404,
-      msg: '用户不存在'
-    }
+  // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
+  console.log("--model-----", model);
+  if (!model) {
+    return { code: 500, msg: "登陆错误" };
   }
-  let UserInfo = UserList[0]
-  console.log(UserInfo, model.password);
-  /**
-   * bcrypt.compareSync(传入密码, 数据库密码)
-   */
-  let result = await bcrypt.compareSync(model.password, UserInfo.password)
-  console.log(result);
-  //验证通过
-  if (result) {
-    //返回token
-    const payLoad = {
-      id: UserInfo.id,
-      usercode: UserInfo.usercode,
-      password: UserInfo.password
-    }
-    const token = jwt.sign(payLoad, ScretKeys, { expiresIn: '1h' });
-    return {
-      code: 200,
-      msg: '登陆成功',
-      token: 'Bearer ' + token
-    }
-  } else {
-    return {
-      code: 400,
-      msg: '密码错误'
-    }
+
+  let userData = await findUserById(model);
+
+  if (userData.data.length <= 0) {
+    let insertSql = `insert into user(user_openid) values(:user_openid)`;
+    let data = await db.pool.query(insertSql, {
+      replacements: {
+        user_openid: model.openid,
+      },
+      type: sequelize.QueryTypes.INSERT,
+    });
+
+    userData = await findUserById(model);
   }
+
+  //   let result = await bcrypt.compareSync(model.openid, userData.data.user_openid)
+  const payLoad = {
+    id: userData.data.id,
+    openid: model.openid,
+  };
+  const token = getToken(payLoad)
+  return {
+    code: 200,
+    msg: "登陆成功",
+    token: "Bearer " + token,
+  };
 }
 
 

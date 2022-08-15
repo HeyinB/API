@@ -2,7 +2,7 @@
 import * as sequelize from 'sequelize'
 import db from '../../db/db'
 
-export async function getUserInfo(model) {
+const getUserInfo = async function (model) {
   let sql = `select * from user where id = :id`
 
   return await db.pool.query(sql, {
@@ -10,4 +10,9 @@ export async function getUserInfo(model) {
       ...model
     }, type: sequelize.QueryTypes.SELECT
   })
+}
+
+
+module.exports = {
+  getUserInfo
 }
