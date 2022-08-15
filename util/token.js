@@ -15,6 +15,8 @@ const authToken = async function (ctx, next) {
   try {
     let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
     let url = ctx.request.url, AllToken = ctx.request.header.authorization
+    if (url === '/favicon.ico') return;
+
     console.log('-------url---------', url);
     if (!pass.includes(url)) {
       if (!AllToken) throw new errs.AuthFailed()
