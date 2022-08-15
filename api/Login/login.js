@@ -11,6 +11,7 @@ import { getToken } from "../../util/token"
 
 //登录
 export async function LoginOrRegister(model) {
+
   let userInfo = await getUserInfo(model)
   if (userInfo.length <= 0) {
     let insertUserSql = `insert into user(user_openid) values(:user_openid)`;
@@ -24,9 +25,10 @@ export async function LoginOrRegister(model) {
 
     userInfo = await getUserInfo(model);
   }
+  console.log('------userInfo----------', userInfo);
 
   const payLoad = {
-    id: userData.data.id,
+    id: userInfo[0].id,
     openid: model.openid,
   };
 
@@ -42,5 +44,10 @@ export async function LoginOrRegister(model) {
 
 //刷新token
 export async function refreshToken(model) {
-  return model
+  let sql = `select * from user`
+  return await db.pool.query(sql, {
+    replacements: {
+      ...model
+    }, type: sequelize.QueryTypes.SELECT
+  })
 }

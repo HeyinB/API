@@ -11,7 +11,7 @@ Login.post('/LoginOrRegister', async (ctx) => {
 })
 
 // 刷新token
-Login.post('/refreshToken', async (ctx) => {
+Login.get('/refreshToken', async (ctx) => {
   await api.refreshToken(ctx)
 })
 
