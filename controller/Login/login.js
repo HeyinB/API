@@ -18,7 +18,6 @@ export async function LoginOrRegister(ctx) {
     openid: 'oFTLj5KsqBnFAc5zAA1Sm0aap4gM'
   }*/
   let data = await api.LoginOrRegister(res.data)
-  console.log('-------data---------', data);
   ctx.body = data
 }
 

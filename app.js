@@ -18,7 +18,22 @@ require('./util/passport')(passport)
 
 // token校验
 app.use(async (ctx, next) => {
-    await authToken(ctx, next)
+    try {
+        await authToken(ctx, next)
+    } catch (err) {
+        if (err.errorCode) {
+            ctx.status = err.status || 500
+            ctx.body = {
+                code: err.code,
+                message: err.message,
+                errorCode: err.errorCode,
+                request: `${ctx.method} ${ctx.path}`,
+            }
+        } else {
+            // 触发 koa app.on('error') 错误监听事件，可以打印出详细的错误堆栈 log
+            ctx.app.emit('error', err, ctx)
+        }
+    }
 });
 
 const res = readFile(process.cwd() + '/router')

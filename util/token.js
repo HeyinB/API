@@ -12,46 +12,38 @@ const getToken = function (payLoad) {
 
 const authToken = async function (ctx, next) {
 
-  try {
-    let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
-    let url = ctx.request.url, AllToken = ctx.request.header.authorization
-    if (url === '/favicon.ico') return;
+  let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
+  let url = ctx.request.url, AllToken = ctx.request.header.authorization
+  if (url === '/favicon.ico') return;
 
-    console.log('-------url---------', url);
-    if (!pass.includes(url)) {
+  console.log('-------url---------', url);
+  if (!pass.includes(url)) {
+
+    try {
       if (!AllToken) throw new errs.AuthFailed()
 
       const parts = AllToken.split(' ');
-      jwt.verify(parts[1], ScretKeys, async (err, decoded) => {
-        if (err) {
-          switch (err.name) {
-            case 'JsonWebTokenError':
-              throw new errs.AuthFailed('无效的token', 10102)
-            case 'TokenExpiredError':
-              throw new errs.AuthFailed('token过期', 10010)
-            default:
-              throw new errs.AuthFailed()
-          }
-        } else {
-          await next()
+      let user = jwt.verify(parts[1], ScretKeys)
+      ctx.state.user = user
+    } catch (err) {
+      if (err) {
+        switch (err.name) {
+          case 'JsonWebTokenError':
+            console.log('-------10102--------');
+            throw new errs.AuthFailed('无效的token', 10102)
+          case 'TokenExpiredError':
+            console.log('-------10010--------');
+            throw new errs.AuthFailed('token过期', 10010)
+          default:
+            console.log('-------default--------');
+            throw new errs.AuthFailed()
         }
-      })
-    } else {
-      await next()
-    }
-  } catch (err) {
-    if (err.errorCode) {
-      ctx.status = err.status || 500
-      ctx.body = {
-        code: err.code,
-        message: err.message,
-        errorCode: err.errorCode,
-        request: `${ctx.method} ${ctx.path}`,
       }
-    } else {
-      // 触发 koa app.on('error') 错误监听事件，可以打印出详细的错误堆栈 log
-      ctx.app.emit('error', err, ctx)
     }
+
+    await next()
+  } else {
+    await next()
   }
 }
 

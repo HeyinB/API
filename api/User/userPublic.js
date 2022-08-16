@@ -12,7 +12,18 @@ const getUserInfo = async function (model) {
   })
 }
 
+const getUserInfoById = async function (model) {
+  let sql = `select * from user where id = :id`
+
+  return await db.pool.query(sql, {
+    replacements: {
+      ...model
+    }, type: sequelize.QueryTypes.SELECT
+  })
+}
+
 
 module.exports = {
-  getUserInfo
+  getUserInfo,
+  getUserInfoById
 }

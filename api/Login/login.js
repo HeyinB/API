@@ -1,12 +1,8 @@
 
 import * as sequelize from 'sequelize'
 import db from '../../db/db'
-import tools from '../../util/tools'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import { ScretKeys } from '../../config/config'
 
-import { getUserInfo } from '../User/userPublic'
+import { getUserInfo, getUserInfoById } from '../User/userPublic'
 import { getToken } from "../../util/token"
 
 //登录
@@ -37,6 +33,7 @@ export async function LoginOrRegister(model) {
     code: 200,
     msg: "登陆成功",
     token: "Bearer " + token,
+    id: userInfo[0].id
   };
 }
 
@@ -44,10 +41,20 @@ export async function LoginOrRegister(model) {
 
 //刷新token
 export async function refreshToken(model) {
-  let sql = `select * from user`
-  return await db.pool.query(sql, {
-    replacements: {
-      ...model
-    }, type: sequelize.QueryTypes.SELECT
-  })
+  console.log('-----刷新token----------刷新token');
+
+  let userInfo = await getUserInfoById(model)
+
+  const payLoad = {
+    id: userInfo[0].id,
+    openid: userInfo[0].openid,
+  };
+
+  const token = getToken(payLoad)
+  return {
+    code: 200,
+    msg: "登陆成功",
+    token: "Bearer " + token,
+    id: userInfo[0].id
+  };
 }
