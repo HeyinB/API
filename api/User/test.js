@@ -4,7 +4,7 @@ import db from '../../db/db'
 import { _BCRYPT_ } from '../../util/tools'
 
 export async function findUserData(str, model) {
-  let sql = `select * from users where `
+  let sql = `select * from user where `
   let where = ''
   switch (str) {
     case 'id':
@@ -29,7 +29,7 @@ export async function findUserData(str, model) {
 }
 
 export async function getUserAllList(str, model) {
-  let sql = `select * from users`
+  let sql = `select * from user`
 
   let data = await db.pool.query(sql, {
     replacements: {
@@ -55,7 +55,7 @@ export async function register(model) {
       msg: '用户已存在'
     }
   } else {
-    let set_user_sql = `insert into users(username, usercode, password, create_data)
+    let set_user_sql = `insert into user(username, usercode, password, create_data)
                             values(:username,:usercode,:password,now())`
     let data = await db.pool.query(set_user_sql, {
       replacements: {

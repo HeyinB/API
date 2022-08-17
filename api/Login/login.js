@@ -21,8 +21,6 @@ export async function LoginOrRegister(model) {
 
     userInfo = await getUserInfo(model);
   }
-  console.log('------userInfo----------', userInfo);
-
   const payLoad = {
     id: userInfo[0].id,
     openid: model.openid,
@@ -41,8 +39,6 @@ export async function LoginOrRegister(model) {
 
 //刷新token
 export async function refreshToken(model) {
-  console.log('-----刷新token----------刷新token');
-
   let userInfo = await getUserInfoById(model)
 
   const payLoad = {
