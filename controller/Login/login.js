@@ -16,6 +16,7 @@ export async function LoginOrRegister(ctx) {
     session_key: '+3DmsRYGyfxLtm7Z9B9G4A==',
     openid: 'oFTLj5KsqBnFAc5zAA1Sm0aap4gM'
   }*/
+  res.data = { ...res.data, ...model }
   let data = await api.LoginOrRegister(res.data)
   ctx.body = {
     code: 200,

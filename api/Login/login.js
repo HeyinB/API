@@ -7,14 +7,16 @@ import { getToken } from "../../util/token"
 
 //登录
 export async function LoginOrRegister(model) {
-
   let userInfo = await getUserInfo(model)
   if (userInfo.length <= 0) {
-    let insertUserSql = `insert into user(user_openid) values(:user_openid)`;
+    let insertUserSql = `insert into user(user_openid,name,avatar,gender) values(:user_openid,:nickName,:avatarUrl,:gender)`;
 
     await db.pool.query(insertUserSql, {
       replacements: {
         user_openid: model.openid,
+        nickName: model.nickName,
+        avatarUrl: model.avatarUrl,
+        gender: model.gender,
       },
       type: sequelize.QueryTypes.INSERT,
     });
@@ -31,7 +33,7 @@ export async function LoginOrRegister(model) {
     code: 200,
     msg: "登陆成功",
     token: "Bearer " + token,
-    id: userInfo[0].id
+    ...userInfo
   };
 }
 
@@ -51,6 +53,6 @@ export async function refreshToken(model) {
     code: 200,
     msg: "token刷新",
     token: "Bearer " + token,
-    id: userInfo[0].id
+    ...userInfo
   };
 }
