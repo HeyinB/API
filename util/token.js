@@ -2,9 +2,8 @@
 import jwt from "jsonwebtoken";
 import { ScretKeys } from "../config/config";
 
-
-
-const Time = '15d'
+//tokens 有效期
+const Time = '3000'
 
 const getToken = function (payLoad) {
   return jwt.sign(payLoad, ScretKeys, { expiresIn: Time });
@@ -16,7 +15,6 @@ const authToken = async function (ctx, next) {
   let url = ctx.request.url, AllToken = ctx.request.header.authorization
   if (url === '/favicon.ico') return;
 
-  console.log('-------url---------', url);
   if (!pass.includes(url)) {
 
     try {
@@ -29,13 +27,10 @@ const authToken = async function (ctx, next) {
       if (err) {
         switch (err.name) {
           case 'JsonWebTokenError':
-            console.log('-------10102--------');
             throw new errs.AuthFailed('无效的token', 10102)
           case 'TokenExpiredError':
-            console.log('-------10010--------');
             throw new errs.AuthFailed('token过期', 10010)
           default:
-            console.log('-------default--------');
             throw new errs.AuthFailed()
         }
       }

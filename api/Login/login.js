@@ -49,7 +49,7 @@ export async function refreshToken(model) {
   const token = getToken(payLoad)
   return {
     code: 200,
-    msg: "登陆成功",
+    msg: "token刷新",
     token: "Bearer " + token,
     id: userInfo[0].id
   };

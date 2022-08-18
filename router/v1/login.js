@@ -12,7 +12,6 @@ Login.post('/LoginOrRegister', async (ctx) => {
 
 // 刷新token
 Login.post('/refreshToken', async (ctx) => {
-  console.log('-----88888----------88888');
   await api.refreshToken(ctx)
 })
 
