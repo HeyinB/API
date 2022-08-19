@@ -3,7 +3,7 @@ import * as sequelize from 'sequelize'
 import db from '../../db/db'
 
 import { getUserInfo, getUserInfoById } from '../User/userPublic'
-import { findUserInfo } from '../classIcon/classicon'
+import { findClassTemp, setClassIcon } from '../classIcon/classicon'
 import { getToken } from "../../util/token"
 
 //登录
@@ -13,12 +13,8 @@ export async function LoginOrRegister(model) {
   let userInfo = await getUserInfo(model)
   if (userInfo.length <= 0) {
     await db.client.transaction(async function (t) {
-
-      //查找icon的模板
-      let classList = await findUserInfo({ istemplate: 1 })
-
       let insertUserSql = `insert into user(user_openid,name,avatar,gender) values(:user_openid,:nickName,:avatarUrl,:gender)`;
-      await db.pool.query(insertUserSql, {
+      let userid = await db.pool.query(insertUserSql, {
         replacements: {
           user_openid: model.openid,
           nickName: model.nickName,
@@ -27,9 +23,21 @@ export async function LoginOrRegister(model) {
         },
         type: sequelize.QueryTypes.INSERT, transaction: t
       });
-    }).catch({
+
+      //查找icon的模板
+      let classList = await findClassTemp({ istemplate: 1 })
+
+      for (let i = 0; i < classList.length; i++) {
+
+        classList[i].userid = model.userid
+        classList[i].openid = model.openid
+        classList[i].icon_sort = i
+        await setClassIcon(classList[i], t)
+      }
 
 
+    }).catch((err) => {
+      console.log('-------err---------', err);
     })
 
     userInfo = await getUserInfo(model);
