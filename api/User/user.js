@@ -12,3 +12,4 @@ export async function findUserInfo(model) {
     })
     return data
 }
+

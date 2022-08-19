@@ -3,23 +3,34 @@ import * as sequelize from 'sequelize'
 import db from '../../db/db'
 
 import { getUserInfo, getUserInfoById } from '../User/userPublic'
+import { findUserInfo } from '../classIcon/classicon'
 import { getToken } from "../../util/token"
 
 //登录
 export async function LoginOrRegister(model) {
+
+  console.log('-------LoginOrRegister---------', model);
   let userInfo = await getUserInfo(model)
   if (userInfo.length <= 0) {
-    let insertUserSql = `insert into user(user_openid,name,avatar,gender) values(:user_openid,:nickName,:avatarUrl,:gender)`;
+    await db.client.transaction(async function (t) {
 
-    await db.pool.query(insertUserSql, {
-      replacements: {
-        user_openid: model.openid,
-        nickName: model.nickName,
-        avatarUrl: model.avatarUrl,
-        gender: model.gender,
-      },
-      type: sequelize.QueryTypes.INSERT,
-    });
+      //查找icon的模板
+      let classList = await findUserInfo({ istemplate: 1 })
+
+      let insertUserSql = `insert into user(user_openid,name,avatar,gender) values(:user_openid,:nickName,:avatarUrl,:gender)`;
+      await db.pool.query(insertUserSql, {
+        replacements: {
+          user_openid: model.openid,
+          nickName: model.nickName,
+          avatarUrl: model.avatarUrl,
+          gender: model.gender,
+        },
+        type: sequelize.QueryTypes.INSERT, transaction: t
+      });
+    }).catch({
+
+
+    })
 
     userInfo = await getUserInfo(model);
   }
