@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { ScretKeys } from "../config/config";
 
 //tokens 有效期
-const Time = '3000'
+const Time = '15d'
 
 const getToken = function (payLoad) {
   return jwt.sign(payLoad, ScretKeys, { expiresIn: Time });
@@ -14,6 +14,8 @@ const authToken = async function (ctx, next) {
   let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
   let url = ctx.request.url, AllToken = ctx.request.header.authorization
   if (url === '/favicon.ico') return;
+
+  console.log('===',url)
 
   if (!pass.includes(url)) {
 

@@ -26,7 +26,6 @@ export async function LoginOrRegister(ctx) {
 
 
 export async function refreshToken(ctx) {
-  console.log('-------ctx---------', ctx.request.body);
   let data = await api.refreshToken(ctx.request.body)
 
   ctx.body = {
