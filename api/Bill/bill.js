@@ -34,8 +34,8 @@ export async function setbill(model) {
   console.log('-------model-----',model);
   
   let sql =
-  `insert into bill(bill_classid,bill_price,bill_remark,bill_datetime,bill_createtime,bill_openid,bill_ledger,bill_userid,bill_iconclass)
-    values(:bill_classid,:bill_price,:bill_remark,:bill_datetime,now(),:bill_openid,:bill_ledger,:bill_userid,:bill_iconclass) `;
+  `insert into bill(bill_classid,bill_price,bill_remark,bill_datetime,bill_createtime,bill_openid,bill_ledger,bill_userid,bill_iconclass,bill_iconname)
+    values(:bill_classid,:bill_price,:bill_remark,:bill_datetime,now(),:bill_openid,:bill_ledger,:bill_userid,:bill_iconclass,:bill_iconname) `;
   let data = await db.pool.query(sql, {
     replacements: {
       ...model,
