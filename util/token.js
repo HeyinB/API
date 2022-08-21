@@ -11,7 +11,7 @@ const getToken = function (payLoad) {
 
 const authToken = async function (ctx, next) {
 
-  let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken']
+  let pass = ['/v1/login/LoginOrRegister', '/v1/login/refreshToken','/v1/test/test']
   let url = ctx.request.url, AllToken = ctx.request.header.authorization
   if (url === '/favicon.ico') return;
 
