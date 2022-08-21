@@ -7,3 +7,12 @@ export async function getbill(ctx) {
         data
     }
 }
+
+
+export async function setbill(ctx) {
+    let data = await api.setbill(ctx.request.body)
+    ctx.body = {
+        code: 200,
+        data
+    }
+}

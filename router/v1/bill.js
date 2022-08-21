@@ -12,6 +12,12 @@ Bill.get("/getbill", async (ctx) => {
   await api.getbill(ctx);
 });
 
+Bill.post("/setbill", async (ctx) => {
+    
+  await api.setbill(ctx);
+});
+
+
 module.exports = {
   Bill,
 };
