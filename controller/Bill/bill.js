@@ -16,3 +16,14 @@ export async function setbill(ctx) {
         data
     }
 }
+
+
+export async function getBillById(ctx) {
+    let data = await api.getBillById(ctx.request.query)
+    ctx.body = {
+        code: 200,
+        data
+    }
+}
+
+

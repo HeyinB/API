@@ -8,15 +8,16 @@ const Bill = new Router({
 //找自己的icon
 
 Bill.get("/getbill", async (ctx) => {
-    
   await api.getbill(ctx);
 });
 
 Bill.post("/setbill", async (ctx) => {
-    
   await api.setbill(ctx);
 });
 
+Bill.get("/getBillById", async (ctx) => {
+  await api.getBillById(ctx);
+});
 
 module.exports = {
   Bill,

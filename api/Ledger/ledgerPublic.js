@@ -2,7 +2,8 @@ import * as sequelize from "sequelize";
 import db from "../../db/db";
 
 const getLedgetSelect = async function (model) {
-  let sql = `select * from ledger where create_openid = :create_openid and create_userid=:create_userid and ledger_isSelected=1`;
+  // and ledger_isSelected=1
+  let sql = `select * from ledger where create_openid = :create_openid and create_userid=:create_userid`;
 
   return await db.pool.query(sql, {
     replacements: {
